@@ -2,7 +2,9 @@ package org.openmf.mifos.dataimport.handler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -115,11 +117,16 @@ public abstract class AbstractDataImportHandler implements DataImportHandler {
     protected void writeString(int colIndex, Row row, String value) {
         row.createCell(colIndex).setCellValue(value);
     }
-    
+
+	private Map<IndexedColors, CellStyle> styleCache = new HashMap<IndexedColors, CellStyle>();
     protected CellStyle getCellStyle(Workbook workbook, IndexedColors color) {
+		if (styleCache.containsKey(color)) {
+			return styleCache.get(color);
+		}
     	CellStyle style = workbook.createCellStyle();
         style.setFillForegroundColor(color.getIndex());
         style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		styleCache.put(color, style);
         return style;
     }
     
